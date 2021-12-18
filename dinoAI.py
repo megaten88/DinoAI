@@ -25,7 +25,7 @@ def main():
     # Training Mode from Stable Baselines
     if train.lower() == "true":
         callback_data = CheckpointCallback(
-            save_freq=200000, save_path="./check", name_prefix=dataPath
+            save_freq=2000, save_path="./check", name_prefix=dataPath
         )
         model = PPO2(
             CnnPolicy,
