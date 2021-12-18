@@ -38,14 +38,14 @@ def main():
     model = PPO2.load(dataPath, env=env)
     images = []
     observe = env.reset()
-    img = model.env.render(mode="rgb_array")
-    for _ in tqdm(range(700)):
-        images.append(img)
+    renderImage = model.env.render(mode="rgb_array")
+    for i in tqdm(range(700)):
+        images.append(renderImage)
         action = model.predict(observe, deterministic=True)
         observe = env.step(action)
-        img = env.render(mode="rgb_array")
+        renderImage = env.render(mode="rgb_array")
     imageio.mimsave(
-        "game.gif", [numpy.array(img) for i, img in enumerate(images)], fps=15
+        "game.gif", [numpy.array(renderImage) for i, renderImage in enumerate(images)], fps=15
     )
     exit()
 
