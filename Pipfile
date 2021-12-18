@@ -5,15 +5,17 @@ name = "pypi"
 
 [packages]
 selenium = "*"
-gym = "*"
 webdriver-manager = "*"
 numpy = "*"
 stable-baselines = "*"
 tqdm = "*"
 opencv-python = "*"
-black = "*"
+imageio = "*"
+black = "==21.6b0"
+gym = "0.15.7"
+tensorflow = "==1.15"
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.7.1"

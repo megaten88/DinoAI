@@ -23,7 +23,7 @@ class GameEnv(gym.Env):
         # Screen definitions
         self.height = sheight
         self.width = swidth
-        # Actions are         self.__driver.get("chrome://dino")3: jump, duck and no action
+        # Actions are 3: jump, duck and no action
         self.canvas = (By.CLASS_NAME, "runner-canvas")
         self.body = (By.TAG_NAME, "body")
         self.action_space = spaces.Discrete(3)
@@ -31,36 +31,35 @@ class GameEnv(gym.Env):
             low=0, high=255, shape=(self.width, self.height, 4), dtype=numpy.uint
         )
         # Headstart Queue
-        self.__key = None
-        self.gameQ:deque = deque(maxlen=4)
+        self.gameQ: deque = deque(maxlen=4)
         # Chrome and Webdriver
-        self.__options = webdriver.ChromeOptions
+        self.__options = webdriver.ChromeOptions()
+        self.__options.add_argument("--no-sandbox")
         self.__options.add_argument("--mute-audio")
-        self.__driver = webdriver.Chrome(ChromeDriverManager.install(), self.__options)
+        self.__options.add_argument("disable-infobars")
+        self.__driver = webdriver.Chrome(ChromeDriverManager().install())
         # Actions in Dictionaries, to make calls easier
-        self.pressAction = {
-            "up":Keys.ARROW_UP,
-            "down":Keys.ARROW_DOWN,
-            "nothing":Keys.ARROW_RIGHT,
-        }
+        self.pressAction = [Keys.ARROW_RIGHT, Keys.ARROW_UP, Keys.ARROW_DOWN]
         super().__init__()
 
-    def imageBase64(self) -> numpy.array:
-        #Getting image to canvas and transfrom to numpy array from base64
+    def imageBase64(self):
+        # Getting image to canvas and transfrom to numpy array from base64
         imageFromCanvas = self.__driver.execute_script(
             "return document.querySelector('canvas.runner-canvas').toDataURL().substring(22)"
         )
         return numpy.array(Image.open(BytesIO(base64.b64decode(imageFromCanvas))))
 
     def getGameScore(self) -> int:
-        '''Score can actually be taken from JavaScript scripts on the game
-            What we do is take the core array and parse it into an INT
-        '''
-        getScore:str = ''.join(self.__driver.execute_script("return Runner.instance_.distanceMeter.digits"))
+        """Score can actually be taken from JavaScript scripts on the game
+        What we do is take the core array and parse it into an INT
+        """
+        getScore: str = "".join(
+            self.__driver.execute_script("return Runner.instance_.distanceMeter.digits")
+        )
         return int(getScore)
 
     def gameObservation(self) -> numpy.stack:
-        getImage = cv2.cvtColor(self.imageBase64, cv2.COLOR_BGR2GRAY)
+        getImage = cv2.cvtColor(self.imageBase64(), cv2.COLOR_BGR2GRAY)
         image = getImage[:500, :480]
         image = cv2.resize(image, (self.width, self.height))
         self.gameQ.append(image)
@@ -69,34 +68,39 @@ class GameEnv(gym.Env):
             return numpy.stack([image] * 4, axis=-1)
         else:
             return numpy.stack(self.gameQ, axis=-1)
-    
-    def isPlaying(self)-> bool:
-            return self._driver.execute_script("return Runner.instance_.playing")
+
+    def isPlaying(self) -> bool:
+        return not self.__driver.execute_script("return Runner.instance_.playing")
 
     ## Method recommended according to the mode gym
     def reset(self) -> numpy.stack:
-        self.__driver.get('chrome://dino')
+        try:
+            self.__driver.get("chrome://dino/")
+        except:
+            print("")
         WebDriverWait(self.__driver, 10).until(
             EC.presence_of_element_located(self.canvas)
         )
         self.__driver.find_element(*self.body).send_keys(Keys.SPACE)
         return self.gameObservation()
 
-    def step(self, action:str):
-        bodyElement:WebElement = self.__driver.find_element(*self.body)
+    def step(self, action: int):
+        bodyElement: WebElement = self.__driver.find_element(*self.body)
+
         bodyElement.send_keys(self.pressAction[action])
-        observe:numpy.stack = self.gameObservation()
-        isPlaying:bool = self.isPlaying()
-        reward = .1 if isPlaying else -1
-        time.sleep(.01)
+        observe: numpy.stack = self.gameObservation()
+        isPlaying: bool = self.isPlaying()
+        reward = 0.1 if not isPlaying else -1
+        time.sleep(0.01)
         return observe, reward, isPlaying, {"score": self.getGameScore()}
 
-    def render(self, mode: str='human'):
+    def render(self, mode: str = "human"):
         img = cv2.cvtColor(self.imageBase64, cv2.COLOR_BGR2RGB)
-        if mode == 'rgb_array':
+        if mode == "rgb_array":
             return img
-        elif mode == 'human':
+        elif mode == "human":
             from gym.envs.classic_control import rendering
+
             if self.viewer is None:
                 self.viewer = rendering.SimpleImageViewer()
             self.viewer.imshow(img)
@@ -106,6 +110,3 @@ class GameEnv(gym.Env):
         if self.viewer is not None:
             self.viewer.close()
             self.viewer = None
-        
-
-
