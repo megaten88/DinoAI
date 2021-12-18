@@ -12,7 +12,8 @@ import sys
 
 def main():
     dataPath = "dinodqn"
-    env = SubprocVecEnv([lambda: GameEnv(96, 96) for i in range(2)])
+    #This is for concurrent run-up
+    env = SubprocVecEnv([lambda: GameEnv(96, 96) for i in range(3)])
     train = None
     try:
         train = sys.argv[1]
