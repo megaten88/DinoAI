@@ -37,7 +37,7 @@ class GameEnv(gym.Env):
         self.__options.add_argument("--no-sandbox")
         self.__options.add_argument("--mute-audio")
         self.__options.add_argument("disable-infobars")
-        self.__driver = webdriver.Chrome(ChromeDriverManager().install(),self.__options)
+        self.__driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=self.__options)
         # Actions in Dictionaries, to make calls easier
         self.pressAction = [Keys.ARROW_RIGHT, Keys.ARROW_UP, Keys.ARROW_DOWN]
         super().__init__()
