@@ -41,7 +41,7 @@ def main():
     images = []
     observe = env.reset()
     renderImage = model.env.render(mode="rgb_array")
-    for _ in tqdm(range(700)):
+    for _ in tqdm(range(400)):
         images.append(renderImage)
         action, _ = model.predict(observe, deterministic=True)
         observe, _, _, _  = env.step(action)
