@@ -31,7 +31,7 @@ class GameEnv(gym.Env):
             low=0, high=255, shape=(self.width, self.height, 3), dtype=numpy.uint
         )
         # Headstart Queue
-        self.gameQ: deque = deque(maxlen=4)
+        self.gameQ: deque = deque(maxlen=3)
         # Chrome and Webdriver
         self.__options = webdriver.ChromeOptions()
         self.__options.add_argument("--no-sandbox")
@@ -40,7 +40,7 @@ class GameEnv(gym.Env):
         self.__driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=self.__options)
         # Actions in Dictionaries, to make calls easier
         self.pressAction = [Keys.ARROW_RIGHT, Keys.ARROW_UP, Keys.ARROW_DOWN]
-        super().__init__()
+        # super().__init__()
 
     def imageBase64(self):
         # Getting image to canvas and transfrom to numpy array from base64
@@ -82,6 +82,7 @@ class GameEnv(gym.Env):
             EC.presence_of_element_located(self.canvas)
         )
         self.__driver.find_element(*self.body).send_keys(Keys.SPACE)
+        return self.gameObservation()
 
     def step(self, action: int):
         bodyElement: WebElement = self.__driver.find_element(*self.body)
