@@ -28,7 +28,7 @@ class GameEnv(gym.Env):
         self.body = (By.TAG_NAME, "body")
         self.action_space = spaces.Discrete(3)
         self.observation_space = spaces.Box(
-            low=0, high=255, shape=(self.width, self.height, 4), dtype=numpy.uint
+            low=0, high=255, shape=(self.width, self.height, 3), dtype=numpy.uint
         )
         # Headstart Queue
         self.gameQ: deque = deque(maxlen=4)
@@ -65,7 +65,7 @@ class GameEnv(gym.Env):
         self.gameQ.append(image)
 
         if len(self.gameQ) < 3:
-            return numpy.stack([image] * 4, axis=-1)
+            return numpy.stack([image] * 3, axis=-1)
         else:
             return numpy.stack(self.gameQ, axis=-1)
 
