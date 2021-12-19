@@ -64,7 +64,7 @@ class GameEnv(gym.Env):
         image = cv2.resize(image, (self.width, self.height))
         self.gameQ.append(image)
 
-        if len(self.gameQ) < 4:
+        if len(self.gameQ) < 3:
             return numpy.stack([image] * 4, axis=-1)
         else:
             return numpy.stack(self.gameQ, axis=-1)
@@ -82,11 +82,9 @@ class GameEnv(gym.Env):
             EC.presence_of_element_located(self.canvas)
         )
         self.__driver.find_element(*self.body).send_keys(Keys.SPACE)
-        return self.gameObservation()
 
     def step(self, action: int):
         bodyElement: WebElement = self.__driver.find_element(*self.body)
-
         bodyElement.send_keys(self.pressAction[action])
         observe: numpy.stack = self.gameObservation()
         isPlaying: bool = self.isPlaying()
@@ -95,7 +93,7 @@ class GameEnv(gym.Env):
         return observe, reward, isPlaying, {"score": self.getGameScore()}
 
     def render(self, mode: str = "human"):
-        img = cv2.cvtColor(self.imageBase64, cv2.COLOR_BGR2RGB)
+        img = cv2.cvtColor(self.imageBase64(), cv2.COLOR_BGR2RGB)
         if mode == "rgb_array":
             return img
         elif mode == "human":

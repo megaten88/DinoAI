@@ -7,13 +7,14 @@ from stable_baselines.common.policies import CnnPolicy
 from stable_baselines.common.vec_env import SubprocVecEnv
 from stable_baselines.common.callbacks import CheckpointCallback
 from gameEnv import GameEnv
+import numpy as np
 import sys
 
 
 def main():
     dataPath = "dinodqn"
     #This is for concurrent run-up
-    env = SubprocVecEnv([lambda: GameEnv(96, 96) for i in range(3)])
+    env = SubprocVecEnv([lambda: GameEnv(96, 96) for i in range(4)])
     train = None
     try:
         train = sys.argv[1]
@@ -33,17 +34,17 @@ def main():
             verbose=1,
             tensorboard_log="./tensor_dino",
         )
-        model.learn(total_timesteps=1550000, callback=[callback_data])
+        model.learn(total_timesteps=250000, callback=[callback_data])
         model.save(dataPath)
     # Load Module
     model = PPO2.load(dataPath, env=env)
     images = []
     observe = env.reset()
     renderImage = model.env.render(mode="rgb_array")
-    for i in tqdm(range(700)):
+    for _ in tqdm(range(700)):
         images.append(renderImage)
-        action = model.predict(observe, deterministic=True)
-        observe = env.step(action)
+        action, _ = model.predict(observe, deterministic=True)
+        observe, _, _, _  = env.step(action)
         renderImage = env.render(mode="rgb_array")
     imageio.mimsave(
         "game.gif", [numpy.array(renderImage) for i, renderImage in enumerate(images)], fps=15
