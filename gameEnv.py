@@ -93,19 +93,7 @@ class GameEnv(gym.Env):
         time.sleep(0.01)
         return observe, reward, isPlaying, {"score": self.getGameScore()}
 
-    def render(self, mode: str = "human"):
+    def render(self, mode):
         img = cv2.cvtColor(self.imageBase64(), cv2.COLOR_BGR2RGB)
         if mode == "rgb_array":
             return img
-        elif mode == "human":
-            from gym.envs.classic_control import rendering
-
-            if self.viewer is None:
-                self.viewer = rendering.SimpleImageViewer()
-            self.viewer.imshow(img)
-            return self.viewer.isopen
-
-    def close(self):
-        if self.viewer is not None:
-            self.viewer.close()
-            self.viewer = None

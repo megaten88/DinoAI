@@ -2,10 +2,10 @@
 import imageio
 import numpy
 from tqdm import tqdm
-from stable_baselines import PPO2
 from stable_baselines.common.policies import CnnPolicy
 from stable_baselines.common.vec_env import SubprocVecEnv
 from stable_baselines.common.callbacks import CheckpointCallback
+from stable_baselines import PPO2
 from gameEnv import GameEnv
 import numpy as np
 import sys
