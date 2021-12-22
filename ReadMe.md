@@ -27,7 +27,20 @@ Para correr el proyecto:
 
 
 ## Bibliografía y referencias:
+- https://arxiv.org/abs/1707.06347
+- https://arxiv.org/abs/1502.05477
+- https://arxiv.org/abs/1502.05477
+- https://arxiv.org/abs/1509.06461
 - https://blog.paperspace.com/dino-run/
 - https://stable-baselines.readthedocs.io/en/master/modules/ppo2.html
 - https://stable-baselines.readthedocs.io/en/master/guide/examples.html?highlight=gif#id2
 - https://stable-baselines.readthedocs.io/en/master/guide/rl_tips.html#which-algorithm-should-i-use
+- https://stable-baselines.readthedocs.io/en/master/modules/policies.html
+- https://towardsdatascience.com/a-comprehensive-guide-to-convolutional-neural-networks-the-eli5
+-way-3bd2b1164a53
+- https://cs231n.github.io/convolutional-networks/https://ibm.com/cloud/learn/convolutional-neural-
+networks
+- https://stable-baselines.readthedocs.io/en/master/modules/ppo2.html
+- https://stable-baselines.readthedocs.io/en/master/guide/examples.html?highlight=gif#id2
+- https://medium.com/deelvin-machine-learning/how-to-play-google-chrome-dino-game-using-reinf
+orcement-learning-d5b99a5d7e04
