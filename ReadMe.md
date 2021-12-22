@@ -44,3 +44,4 @@ networks
 - https://stable-baselines.readthedocs.io/en/master/guide/examples.html?highlight=gif#id2
 - https://medium.com/deelvin-machine-learning/how-to-play-google-chrome-dino-game-using-reinf
 orcement-learning-d5b99a5d7e04
+- https://www.csd.uwo.ca/~xling/cs346a/extra/tdgammon.pdf
